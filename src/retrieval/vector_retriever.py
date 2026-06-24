@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import threading
+
 import numpy as np
 
 from src.features.embedding_generator import EmbeddingGenerator
@@ -17,18 +19,20 @@ class VectorRetriever:
         self._gen = EmbeddingGenerator(model_name)
         self._embeddings: np.ndarray | None = None
         self._asins: list[str] = []
+        self._lock = threading.RLock()
 
     def _ensure_loaded(self, conn) -> None:
-        if self._embeddings is not None:
-            return
-        rows = conn.execute(
-            "SELECT asin, embedding FROM product_embeddings ORDER BY asin"
-        ).fetchall()
-        if not rows:
-            raise RuntimeError("No product embeddings found. Run `make index` first.")
-        self._asins = [r[0] for r in rows]
-        self._embeddings = np.array([r[1] for r in rows], dtype=np.float32)
-        logger.info("Loaded %d product embeddings from DuckDB", len(self._asins))
+        with self._lock:
+            if self._embeddings is not None:
+                return
+            rows = conn.execute(
+                "SELECT asin, embedding FROM product_embeddings ORDER BY asin"
+            ).fetchall()
+            if not rows:
+                raise RuntimeError("No product embeddings found. Run `make index` first.")
+            self._asins = [r[0] for r in rows]
+            self._embeddings = np.array([r[1] for r in rows], dtype=np.float32)
+            logger.info("Loaded %d product embeddings from DuckDB", len(self._asins))
 
     def search(self, query: str, k: int = 10, conn=None) -> list[dict]:
         """Return top-k products by cosine similarity.
@@ -64,5 +68,6 @@ class VectorRetriever:
 
     def reload(self) -> None:
         """Force re-load embeddings from DB on next search."""
-        self._embeddings = None
-        self._asins = []
+        with self._lock:
+            self._embeddings = None
+            self._asins = []

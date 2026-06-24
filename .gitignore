@@ -15,6 +15,7 @@ env/
 
 # Data (never commit raw dumps)
 data/*.duckdb
+data/*.duckdb.wal
 data/*.joblib
 data/*.pkl
 data/sample/*.jsonl
@@ -46,6 +47,8 @@ Thumbs.db
 .coverage
 htmlcov/
 .mypy_cache/
+frontend/playwright-report/
+frontend/test-results/
 
 # uv
 .uv/

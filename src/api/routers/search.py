@@ -41,6 +41,8 @@ def search(
     k: int = Query(10, ge=1, le=100),
     mode: str = Query("hybrid", pattern="^(bm25|vector|hybrid)$"),
     alpha: float = Query(0.5, ge=0.0, le=1.0, description="Blend weight (0=BM25, 1=vector)"),
+    min_rating: float = Query(0.0, ge=0.0, le=5.0, description="Minimum avg_rating filter"),
+    min_reviews: int = Query(0, ge=0, description="Minimum rating_number filter"),
 ) -> SearchResponse:
     """Search products using BM25, vector, or hybrid retrieval."""
     from src.api.state import get_state
@@ -51,11 +53,11 @@ def search(
 
     try:
         if mode == "bm25":
-            raw = state.bm25.search(q, k=k)
+            raw = state.bm25.search(q, k=k * 3 if (min_rating or min_reviews) else k)
         elif mode == "vector":
-            raw = state.vector.search(q, k=k, conn=conn)
+            raw = state.vector.search(q, k=k * 3 if (min_rating or min_reviews) else k, conn=conn)
         else:
-            raw = state.hybrid.search(q, k=k, alpha=alpha, conn=conn)
+            raw = state.hybrid.search(q, k=k * 3 if (min_rating or min_reviews) else k, alpha=alpha, conn=conn)
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
 
@@ -63,7 +65,7 @@ def search(
     asins = [r["asin"] for r in raw]
     meta = _get_product_meta(conn, asins)
 
-    hits = [
+    all_hits = [
         ProductHit(
             **meta.get(r["asin"], {"asin": r["asin"]}),
             bm25_score=r.get("bm25_score"),
@@ -73,6 +75,12 @@ def search(
         )
         for r in raw
     ]
+
+    hits = [
+        h for h in all_hits
+        if (h.avg_rating or 0.0) >= min_rating
+        and (h.rating_number or 0) >= min_reviews
+    ][:k]
 
     _log_query(conn, q, mode, k, len(hits), latency_ms)
 

@@ -14,53 +14,50 @@ import {
   FlaskConical,
   ChevronLeft,
   ChevronRight,
+  Play,
+  GitCompareArrows,
+  ScatterChart,
 } from 'lucide-react';
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ReactNode;
-}
-
-interface NavGroup {
-  group: string;
-  items: NavItem[];
-}
-
-const navGroups: NavGroup[] = [
-  {
-    group: 'PLATFORM',
-    items: [
-      { label: 'Overview', href: '/', icon: <LayoutDashboard size={16} /> },
-    ],
-  },
-  {
-    group: 'SEARCH & DISCOVERY',
-    items: [
-      { label: 'Search Lab', href: '/search', icon: <Search size={16} /> },
-      { label: 'Product Explorer', href: '/products', icon: <Package size={16} /> },
-    ],
-  },
-  {
-    group: 'INTELLIGENCE',
-    items: [
-      { label: 'Review Intelligence', href: '/reviews', icon: <FileText size={16} /> },
-      { label: 'Recommendations', href: '/recommendations', icon: <Sparkles size={16} /> },
-    ],
-  },
-  {
-    group: 'DATA & MODELS',
-    items: [
-      { label: 'Analytics', href: '/analytics', icon: <BarChart3 size={16} /> },
-      { label: 'Data Pipeline', href: '/pipeline', icon: <GitBranch size={16} /> },
-      { label: 'Evaluation', href: '/evaluation', icon: <FlaskConical size={16} /> },
-    ],
-  },
-];
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
+
+  const navGroups = [
+    {
+      group: t('nav.group.platform'),
+      items: [
+        { label: t('nav.overview'), href: '/', icon: <LayoutDashboard size={16} /> },
+        { label: t('nav.demo'), href: '/demo', icon: <Play size={16} /> },
+      ],
+    },
+    {
+      group: t('nav.group.search'),
+      items: [
+        { label: t('nav.search'), href: '/search', icon: <Search size={16} /> },
+        { label: t('nav.products'), href: '/products', icon: <Package size={16} /> },
+      ],
+    },
+    {
+      group: t('nav.group.intelligence'),
+      items: [
+        { label: t('nav.reviews'), href: '/reviews', icon: <FileText size={16} /> },
+        { label: t('nav.recommendations'), href: '/recommendations', icon: <Sparkles size={16} /> },
+        { label: '商品比較', href: '/compare', icon: <GitCompareArrows size={16} /> },
+      ],
+    },
+    {
+      group: t('nav.group.data'),
+      items: [
+        { label: t('nav.analytics'), href: '/analytics', icon: <BarChart3 size={16} /> },
+        { label: 'Embedding 聚類', href: '/analytics/clusters', icon: <ScatterChart size={16} /> },
+        { label: t('nav.pipeline'), href: '/pipeline', icon: <GitBranch size={16} /> },
+        { label: t('nav.evaluation'), href: '/evaluation', icon: <FlaskConical size={16} /> },
+      ],
+    },
+  ];
 
   function isActive(href: string) {
     if (href === '/') return pathname === '/';

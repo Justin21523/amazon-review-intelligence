@@ -27,6 +27,9 @@ class ProductHit(BaseModel):
     hybrid_score: float | None = None
     rerank_score: float | None = None
     rank: int | None = None
+    explanation: str | None = None
+    explanation_type: str | None = None
+    seed_asin: str | None = None
 
 
 class SearchResponse(BaseModel):
@@ -46,6 +49,17 @@ class ReviewSummary(BaseModel):
     text: str | None
     sentiment_label: str | None
     helpful_vote: int | None
+
+
+class ReviewDetail(BaseModel):
+    review_id: str
+    rating: float
+    title: str | None = None
+    text: str | None = None
+    helpful_vote: int = 0
+    sentiment_label: str | None = None
+    verified_purchase: bool = False
+    date: str | None = None
 
 
 class ProductDetail(BaseModel):
@@ -75,7 +89,9 @@ class RecommendationResponse(BaseModel):
     user_id: str
     strategy: str
     k: int
+    user_review_count: int = 0
     recommendations: list[ProductHit]
+    seed_product_asin: str | None = None
 
 
 class BrandStats(BaseModel):
@@ -101,11 +117,15 @@ class OverviewStats(BaseModel):
     date_range_start: str | None
     date_range_end: str | None
     query_log_count: int
+    bm25_doc_count: int | None = None
+    vector_doc_count: int | None = None
 
 
 class TrendPoint(BaseModel):
     month: str
     count: int
+    avg_rating: float | None = None
+    negative_rate: float | None = None
 
 
 class TopProduct(BaseModel):
@@ -119,3 +139,15 @@ class TopProduct(BaseModel):
 class RatingBucket(BaseModel):
     rating: int
     count: int
+
+
+class UserSample(BaseModel):
+    user_id: str
+    review_count: int
+
+
+class ProductSuggest(BaseModel):
+    asin: str
+    title: str | None = None
+    avg_rating: float | None = None
+    rating_number: int | None = None

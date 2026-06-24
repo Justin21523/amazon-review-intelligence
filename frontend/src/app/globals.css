@@ -390,3 +390,89 @@
   justify-content: center;
   margin-bottom: 10px;
 }
+
+/* ─── Pipeline node float animation ─── */
+@keyframes node-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-7px); }
+}
+
+/* ─── Guided Tour Highlight ─── */
+@keyframes tour-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0), 0 0 0 6px rgba(37,99,235,0.15); }
+  50%       { box-shadow: 0 0 0 0 rgba(37,99,235,0), 0 0 0 12px rgba(37,99,235,0.06); }
+}
+
+[data-tour-active] {
+  outline: 3px solid #2563EB;
+  outline-offset: 4px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 6px rgba(37,99,235,0.15);
+  position: relative;
+  z-index: 100;
+  animation: tour-pulse 2s ease-in-out infinite;
+  transition: outline 0.2s;
+}
+
+/* ─── Pipeline Journey Animations ─── */
+@keyframes journey-slide-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes journey-slide-left {
+  from { opacity: 0; transform: translateX(-48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes token-pop {
+  0%   { transform: scale(0);    opacity: 0; }
+  60%  { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes data-packet-flow {
+  0%   { transform: translateX(-12px); opacity: 0; }
+  15%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(48px);  opacity: 0; }
+}
+
+@keyframes embed-block-in {
+  from { transform: scaleY(0); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes bar-grow-width {
+  from { width: 0 !important; }
+  to   { width: var(--bar-target-w, 100%); }
+}
+
+@keyframes branch-draw {
+  from { stroke-dashoffset: var(--path-len, 200); }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes pipeline-active-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+  40%       { box-shadow: 0 0 0 20px rgba(37,99,235,0.12); }
+}
+
+[data-pipeline-active] {
+  outline: 3px solid #2563EB;
+  outline-offset: 8px;
+  border-radius: 14px;
+  animation: pipeline-active-pulse 1.8s ease-in-out forwards;
+  position: relative;
+  z-index: 10;
+}
+
+@keyframes strategy-flash {
+  0%   { transform: scale(1);   box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+  40%  { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(124,58,237,0.2); }
+  100% { transform: scale(1);   box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+}
+
+.strategy-flash {
+  animation: strategy-flash 0.6s ease-out forwards;
+}

@@ -5,19 +5,15 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  ComposedChart, Area, Line, PieChart, Pie, Legend,
 } from 'recharts';
-import { fetchProduct, fetchProductSimilar, fetchProductSummary } from '@/lib/api';
+import { fetchProduct, fetchProductSimilar, fetchProductSummary, fetchProductRatingTimeline } from '@/lib/api';
 import StarRating from '@/components/ui/StarRating';
 import ProductCard from '@/components/ui/ProductCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const RATING_COLORS: Record<number, string> = {
   1: '#DC2626',
@@ -39,6 +35,7 @@ export default function ProductDetailPage() {
   const params = useParams<{ asin: string }>();
   const asin = params.asin;
   const router = useRouter();
+  const { t } = useLanguage();
 
   const { data: product, isLoading: loadingProduct } = useQuery({
     queryKey: ['product', asin],
@@ -58,6 +55,12 @@ export default function ProductDetailPage() {
     enabled: !!asin,
   });
 
+  const { data: timeline } = useQuery({
+    queryKey: ['timeline', asin],
+    queryFn: () => fetchProductRatingTimeline(asin),
+    enabled: !!asin,
+  });
+
   const ratingData = product
     ? Object.entries(product.rating_distribution)
         .map(([k, v]) => ({ rating: Number(k), count: v }))
@@ -69,7 +72,7 @@ export default function ProductDetailPage() {
       {/* Breadcrumb */}
       <div style={{ fontSize: '13px', color: 'var(--app-text-muted)', display: 'flex', gap: '6px', alignItems: 'center' }}>
         <Link href="/products" style={{ color: 'var(--app-brand)', textDecoration: 'none' }}>
-          Products
+          {t('product.breadcrumb')}
         </Link>
         <span>›</span>
         <span>{asin}</span>
@@ -87,7 +90,7 @@ export default function ProductDetailPage() {
               </h1>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', fontSize: '13px', color: 'var(--app-text-muted)' }}>
                 <span style={{ fontFamily: 'monospace' }}>{product.asin}</span>
-                {product.brand && <span>Brand: <strong>{product.brand}</strong></span>}
+                {product.brand && <span>{t('product.brand')}: <strong>{product.brand}</strong></span>}
                 {product.main_category && <span>{product.main_category}</span>}
                 {product.price && (
                   <span style={{ color: '#16A34A', fontWeight: 700 }}>
@@ -101,7 +104,7 @@ export default function ProductDetailPage() {
                 <StarRating rating={product.avg_rating} />
               )}
               <span style={{ fontSize: '12px', color: 'var(--app-text-muted)' }}>
-                {product.rating_number?.toLocaleString()} reviews
+                {product.rating_number?.toLocaleString()} {t('kpi.reviews')}
               </span>
               {product.reputation_score !== undefined && (
                 <span
@@ -121,15 +124,15 @@ export default function ProductDetailPage() {
           </div>
         </div>
       ) : (
-        <div className="ari-card" style={{ color: 'var(--app-text-muted)' }}>Product not found.</div>
+        <div className="ari-card" style={{ color: 'var(--app-text-muted)' }}>{t('product.not_found')}</div>
       )}
 
       {/* Tabs */}
       <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="similar">Similar Products</TabsTrigger>
+          <TabsTrigger value="overview">{t('product.tab.overview')}</TabsTrigger>
+          <TabsTrigger value="reviews">{t('product.tab.reviews')}</TabsTrigger>
+          <TabsTrigger value="similar">{t('product.tab.similar')}</TabsTrigger>
         </TabsList>
 
         {/* Overview tab */}
@@ -140,7 +143,7 @@ export default function ProductDetailPage() {
               <Skeleton style={{ height: '80px', borderRadius: '12px' }} />
             ) : summary?.summary_text ? (
               <div className="ari-card">
-                <div className="card-title" style={{ marginBottom: '8px' }}>AI Summary</div>
+                <div className="card-title" style={{ marginBottom: '8px' }}>{t('product.ai_summary')}</div>
                 <p style={{ fontSize: '14px', color: 'var(--app-text)', lineHeight: '1.6' }}>
                   {summary.summary_text}
                 </p>
@@ -152,7 +155,7 @@ export default function ProductDetailPage() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <div className="ari-card">
                   <div className="card-title" style={{ marginBottom: '10px', color: '#16A34A' }}>
-                    Pros
+                    {t('reviews.pros')}
                   </div>
                   <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {summary.pros.map((p, i) => (
@@ -162,13 +165,13 @@ export default function ProductDetailPage() {
                       </li>
                     ))}
                     {summary.pros.length === 0 && (
-                      <li style={{ color: 'var(--app-text-muted)', fontSize: '13px' }}>None identified</li>
+                      <li style={{ color: 'var(--app-text-muted)', fontSize: '13px' }}>{t('reviews.none')}</li>
                     )}
                   </ul>
                 </div>
                 <div className="ari-card">
                   <div className="card-title" style={{ marginBottom: '10px', color: '#DC2626' }}>
-                    Cons
+                    {t('reviews.cons')}
                   </div>
                   <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {summary.cons.map((c, i) => (
@@ -178,7 +181,7 @@ export default function ProductDetailPage() {
                       </li>
                     ))}
                     {summary.cons.length === 0 && (
-                      <li style={{ color: 'var(--app-text-muted)', fontSize: '13px' }}>None identified</li>
+                      <li style={{ color: 'var(--app-text-muted)', fontSize: '13px' }}>{t('reviews.none')}</li>
                     )}
                   </ul>
                 </div>
@@ -188,7 +191,7 @@ export default function ProductDetailPage() {
             {/* Rating Distribution chart */}
             {ratingData.length > 0 && (
               <div className="ari-card">
-                <div className="card-title" style={{ marginBottom: '12px' }}>Rating Distribution</div>
+                <div className="card-title" style={{ marginBottom: '12px' }}>{t('product.rating_dist')}</div>
                 <ResponsiveContainer width="100%" height={160}>
                   <BarChart data={ratingData} layout="vertical" margin={{ top: 0, right: 8, bottom: 0, left: 8 }}>
                     <XAxis type="number" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
@@ -200,7 +203,7 @@ export default function ProductDetailPage() {
                       axisLine={false}
                       tickFormatter={(v: number) => `${v}★`}
                     />
-                    <Tooltip formatter={(v) => [Number(v).toLocaleString(), 'Reviews']} />
+                    <Tooltip formatter={(v) => [Number(v).toLocaleString(), t('kpi.reviews')]} />
                     <Bar dataKey="count" radius={[0, 4, 4, 0]}>
                       {ratingData.map((entry) => (
                         <Cell key={entry.rating} fill={RATING_COLORS[entry.rating] ?? '#6B7280'} />
@@ -211,25 +214,69 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Sentiment distribution */}
-            {summary && Object.keys(summary.sentiment_distribution).length > 0 && (
+            {/* Sentiment distribution — PieChart */}
+            {summary && Object.keys(summary.sentiment_distribution).length > 0 && (() => {
+              const SENT_COLORS: Record<string, string> = { positive: '#16A34A', negative: '#DC2626', neutral: '#D97706' };
+              const sentData = Object.entries(summary.sentiment_distribution).map(([label, value]) => ({
+                name: label, value,
+                fill: Object.keys(SENT_COLORS).find(k => label.toLowerCase().includes(k))
+                  ? SENT_COLORS[Object.keys(SENT_COLORS).find(k => label.toLowerCase().includes(k))!]
+                  : '#6B7280',
+              }));
+              const total = sentData.reduce((s, d) => s + d.value, 0);
+              return (
+                <div className="ari-card" style={{ display: 'grid', gridTemplateColumns: '180px 1fr', gap: '16px', alignItems: 'center' }}>
+                  <div>
+                    <div className="card-title" style={{ marginBottom: '8px' }}>{t('product.sentiment_dist')}</div>
+                    <ResponsiveContainer width="100%" height={160}>
+                      <PieChart>
+                        <Pie data={sentData} dataKey="value" cx="50%" cy="50%" innerRadius={40} outerRadius={72} paddingAngle={3}>
+                          {sentData.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
+                        </Pie>
+                        <Tooltip formatter={(v) => [`${Number(v).toLocaleString()} (${((Number(v)/total)*100).toFixed(1)}%)`, '']} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    {sentData.map((d) => (
+                      <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: d.fill, flexShrink: 0 }} />
+                        <span style={{ fontSize: '12px', fontWeight: 600, color: d.fill, minWidth: '70px', textTransform: 'capitalize' }}>{d.name}</span>
+                        <div style={{ flex: 1, height: '6px', background: '#F3F4F6', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', background: d.fill, borderRadius: '3px', width: `${(d.value/total)*100}%` }} />
+                        </div>
+                        <span style={{ fontSize: '11px', color: 'var(--app-text-muted)', minWidth: '50px', textAlign: 'right' }}>{d.value.toLocaleString()}</span>
+                      </div>
+                    ))}
+                    <div style={{ fontSize: '11px', color: 'var(--app-text-muted)', marginTop: '4px' }}>共 {total.toLocaleString()} 則評論</div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Monthly rating timeline */}
+            {timeline && timeline.length >= 2 && (
               <div className="ari-card">
-                <div className="card-title" style={{ marginBottom: '10px' }}>Sentiment Distribution</div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {Object.entries(summary.sentiment_distribution).map(([label, count]) => (
-                    <span
-                      key={label}
-                      className={sentimentClass(label)}
-                      style={{
-                        padding: '4px 12px',
-                        borderRadius: '20px',
-                        fontSize: '12px',
-                        fontWeight: 600,
-                      }}
-                    >
-                      {label}: {count.toLocaleString()}
-                    </span>
-                  ))}
+                <div className="card-title" style={{ marginBottom: '12px' }}>評分趨勢時間軸</div>
+                <ResponsiveContainer width="100%" height={200}>
+                  <ComposedChart data={timeline} margin={{ top: 4, right: 20, bottom: 0, left: 0 }}>
+                    <XAxis dataKey="month" tick={{ fontSize: 10 }} tickLine={false} interval="preserveStartEnd" />
+                    <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickLine={false} axisLine={false} />
+                    <YAxis yAxisId="right" orientation="right" domain={[1, 5]} tick={{ fontSize: 10 }} tickLine={false} axisLine={false} tickFormatter={(v: number) => `${v}★`} />
+                    <Tooltip
+                      formatter={(value, name) =>
+                        name === 'avg_rating'
+                          ? [`${Number(value).toFixed(2)}★`, '平均評分']
+                          : [Number(value).toLocaleString(), '評論數']
+                      }
+                    />
+                    <Area yAxisId="left" type="monotone" dataKey="review_count" fill="#BFDBFE" stroke="#2563EB" strokeWidth={1.5} fillOpacity={0.6} name="review_count" />
+                    <Line yAxisId="right" type="monotone" dataKey="avg_rating" stroke="#D97706" strokeWidth={2} dot={false} name="avg_rating" />
+                  </ComposedChart>
+                </ResponsiveContainer>
+                <div style={{ display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--app-text-muted)', marginTop: '6px' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><span style={{ width: '12px', height: '3px', background: '#2563EB', display: 'inline-block', borderRadius: '2px' }} />評論量</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><span style={{ width: '12px', height: '3px', background: '#D97706', display: 'inline-block', borderRadius: '2px' }} />平均評分（右軸）</span>
                 </div>
               </div>
             )}
@@ -245,7 +292,7 @@ export default function ProductDetailPage() {
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--app-border)' }}>
-                    {['Rating', 'Title', 'Review', 'Sentiment', 'Helpful'].map((h) => (
+                    {[t('product.reviews.rating'), t('product.reviews.title'), t('product.reviews.review'), t('product.reviews.sentiment'), t('product.reviews.helpful')].map((h) => (
                       <th
                         key={h}
                         style={{
@@ -302,7 +349,7 @@ export default function ProductDetailPage() {
                   {(!product?.top_reviews || product.top_reviews.length === 0) && (
                     <tr>
                       <td colSpan={5} style={{ padding: '20px', textAlign: 'center', color: 'var(--app-text-muted)' }}>
-                        No reviews available
+                        {t('product.no_reviews')}
                       </td>
                     </tr>
                   )}
@@ -323,15 +370,27 @@ export default function ProductDetailPage() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
               {similar?.map((p) => (
-                <ProductCard
-                  key={p.asin}
-                  product={p}
-                  onClick={() => router.push(`/products/${p.asin}`)}
-                />
+                <div key={p.asin} style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--app-border)' }}>
+                  <ProductCard
+                    product={{ ...p, vector_score: undefined }}
+                    onClick={() => router.push(`/products/${p.asin}`)}
+                  />
+                  {p.vector_score != null && (
+                    <div style={{ padding: '6px 12px 8px', borderTop: '1px solid #F3F4F6' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontSize: '9px', fontWeight: 700, color: '#7C3AED', minWidth: '52px' }}>語意相似</span>
+                        <div style={{ flex: 1, height: '5px', background: '#F3F4F6', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', background: '#7C3AED', borderRadius: '3px', width: `${p.vector_score * 100}%` }} />
+                        </div>
+                        <span style={{ fontSize: '10px', fontWeight: 700, color: '#7C3AED' }}>{p.vector_score.toFixed(3)}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
               {(!similar || similar.length === 0) && (
                 <div style={{ color: 'var(--app-text-muted)', fontSize: '13px', padding: '20px 0' }}>
-                  No similar products found
+                  {t('product.no_similar')}
                 </div>
               )}
             </div>

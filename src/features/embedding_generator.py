@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import threading
+
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -18,13 +20,15 @@ class EmbeddingGenerator:
     def __init__(self, model_name: str = "all-MiniLM-L6-v2") -> None:
         self._model_name = model_name
         self._model = None
+        self._lock = threading.RLock()
 
     def _get_model(self):
-        if self._model is None:
-            from sentence_transformers import SentenceTransformer
-            logger.info("Loading embedding model: %s", self._model_name)
-            self._model = SentenceTransformer(self._model_name)
-        return self._model
+        with self._lock:
+            if self._model is None:
+                from sentence_transformers import SentenceTransformer
+                logger.info("Loading embedding model: %s", self._model_name)
+                self._model = SentenceTransformer(self._model_name)
+            return self._model
 
     def encode_products(self, conn, batch_size: int = 64) -> int:
         """Encode all products and write to product_embeddings table."""
@@ -105,5 +109,6 @@ class EmbeddingGenerator:
 
     def encode_query(self, query: str) -> np.ndarray:
         """Encode a single search query and return normalized embedding."""
-        model = self._get_model()
-        return model.encode([clean_text(query)], normalize_embeddings=True)[0]
+        with self._lock:
+            model = self._get_model()
+            return model.encode([clean_text(query)], normalize_embeddings=True)[0]

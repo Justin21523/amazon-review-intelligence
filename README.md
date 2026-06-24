@@ -218,7 +218,30 @@ cp .env.example .env
 
 ---
 
-## 12. Limitations and Future Work
+## 12. Playwright Validation Evidence
+
+Full navigation and feature validation was recorded with Playwright.
+
+| Artifact | Link |
+|----------|------|
+| Full evidence manifest | [`docs/playwright/latest/manifest.md`](docs/playwright/latest/manifest.md) |
+| Full process recording | [`docs/playwright/latest/videos/video.webm`](docs/playwright/latest/videos/video.webm) |
+| Screenshot count | 74 viewport screenshots |
+| Validation command | `cd frontend && npm run test:e2e:evidence` |
+
+Validation covered sidebar navigation, topbar search, language toggle, search modes, compare mode, product detail tabs, reviews filters, recommendations, product comparison, analytics tabs, embedding clusters, pipeline, evaluation, demo upload flow, and the 16-step guided tour.
+
+Representative screenshots:
+
+![Overview validation](docs/playwright/latest/screenshots/001-nav-overview-viewport-1.png)
+![Search hybrid results](docs/playwright/latest/screenshots/026-search-hybrid-results-viewport-1.png)
+![Search compare mode](docs/playwright/latest/screenshots/030-search-compare-mode-viewport-1.png)
+![Product detail](docs/playwright/latest/screenshots/035-product-detail-overview-viewport-1.png)
+![Recommendations](docs/playwright/latest/screenshots/041-recommendations-selected-user-viewport-1.png)
+![Embedding clusters](docs/playwright/latest/screenshots/048-embedding-clusters-viewport-1.png)
+![Guided tour](docs/playwright/latest/screenshots/059-guided-tour-step-1.png)
+
+## 13. Limitations and Future Work
 
 ### Current Limitations
 

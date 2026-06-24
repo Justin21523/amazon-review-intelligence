@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
+import { GuidedTourProvider } from '@/components/tour/GuidedTourContext';
+import FloatingTourAssistant from '@/components/tour/FloatingTourAssistant';
+import { LanguageProvider } from '@/contexts/LanguageContext';
 
 export default function ShellClient({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -17,13 +20,18 @@ export default function ShellClient({ children }: { children: React.ReactNode })
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="app-layout">
-        <Sidebar />
-        <div className="app-main">
-          <TopBar />
-          <main className="app-content">{children}</main>
-        </div>
-      </div>
+      <LanguageProvider>
+        <GuidedTourProvider>
+          <div className="app-layout">
+            <Sidebar />
+            <div className="app-main">
+              <TopBar />
+              <FloatingTourAssistant />
+              <main className="app-content">{children}</main>
+            </div>
+          </div>
+        </GuidedTourProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }

@@ -5,12 +5,14 @@ from src.api.schemas.responses import (
     OverviewStats,
     ProductDetail,
     ProductHit,
+    ProductSuggest,
     ProductSummary,
     RatingBucket,
     RecommendationResponse,
     SearchResponse,
     TopProduct,
     TrendPoint,
+    UserSample,
 )
 
 __all__ = [
@@ -18,6 +20,7 @@ __all__ = [
     "ProductHit",
     "ProductDetail",
     "ProductSummary",
+    "ProductSuggest",
     "SearchResponse",
     "RecommendationResponse",
     "BrandStats",
@@ -26,4 +29,5 @@ __all__ = [
     "TrendPoint",
     "TopProduct",
     "RatingBucket",
+    "UserSample",
 ]

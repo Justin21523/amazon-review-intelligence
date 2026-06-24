@@ -4,9 +4,12 @@ import { useState, useEffect, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { fetchHealth } from '@/lib/api';
+import { useLanguage } from '@/contexts/LanguageContext';
+import type { Locale } from '@/lib/i18n';
 
 export default function TopBar() {
   const router = useRouter();
+  const { t, locale, setLocale } = useLanguage();
   const [query, setQuery] = useState('');
   const [apiOk, setApiOk] = useState<boolean | null>(null);
 
@@ -22,6 +25,11 @@ export default function TopBar() {
     }
   }
 
+  function toggleLocale() {
+    const next: Locale = locale === 'zh-TW' ? 'en' : 'zh-TW';
+    setLocale(next);
+  }
+
   return (
     <header className="app-topbar">
       {/* Center: search input */}
@@ -31,7 +39,7 @@ export default function TopBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Search products by ASIN or keyword..."
+          placeholder={t('topbar.placeholder')}
           style={{
             width: '100%',
             padding: '7px 14px',
@@ -59,18 +67,37 @@ export default function TopBar() {
             whiteSpace: 'nowrap',
           }}
         >
-          🏠 Home &amp; Kitchen · 83K products
+          {t('topbar.dataset')}
         </span>
+
+        {/* Language toggle */}
+        <button
+          onClick={toggleLocale}
+          title={locale === 'zh-TW' ? 'Switch to English' : '切換至中文'}
+          style={{
+            fontSize: '12px',
+            fontWeight: 600,
+            padding: '4px 10px',
+            border: '1px solid var(--app-border)',
+            borderRadius: '6px',
+            background: 'var(--app-bg)',
+            color: 'var(--app-brand)',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {locale === 'zh-TW' ? 'EN' : '中文'}
+        </button>
 
         {/* Status dot */}
         <div
           style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--app-text-muted)' }}
-          title={apiOk === null ? 'Checking API...' : apiOk ? 'API online' : 'API offline'}
+          title={apiOk === null ? t('topbar.checking') : apiOk ? t('topbar.live') : t('topbar.offline')}
         >
           <span
             className={`status-dot ${apiOk === true ? 'ok' : apiOk === false ? 'error' : 'warning'}`}
           />
-          {apiOk === true ? 'Live' : apiOk === false ? 'Offline' : '...'}
+          {apiOk === true ? t('topbar.live') : apiOk === false ? t('topbar.offline') : t('topbar.checking')}
         </div>
 
         {/* GitHub link */}

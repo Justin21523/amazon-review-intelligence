@@ -11,13 +11,13 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onClick }: ProductCardProps) {
   const hasScores =
-    product.bm25_score !== undefined ||
-    product.vector_score !== undefined ||
-    product.hybrid_score !== undefined;
+    product.bm25_score != null ||
+    product.vector_score != null ||
+    product.hybrid_score != null;
 
   return (
     <div className="product-card" onClick={onClick} role={onClick ? 'button' : undefined}>
-      {product.rank !== undefined && (
+      {product.rank != null && (
         <span
           style={{
             fontSize: '11px',
@@ -49,15 +49,15 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
         {product.asin}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-        {product.avg_rating !== undefined && (
+        {product.avg_rating != null && (
           <StarRating rating={product.avg_rating} />
         )}
-        {product.rating_number !== undefined && (
+        {product.rating_number != null && (
           <span style={{ fontSize: '12px', color: '#6B7280' }}>
             ({product.rating_number.toLocaleString()} reviews)
           </span>
         )}
-        {product.price !== undefined && (
+        {product.price != null && (
           <span style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600 }}>
             ${product.price.toFixed(2)}
           </span>
