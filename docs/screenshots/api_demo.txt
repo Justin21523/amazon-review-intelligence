@@ -1,0 +1,29 @@
+====================================================
+Amazon Review Intelligence — Live API Demo
+FastAPI v0.1.0 | DuckDB | 83,119 products | 99,946 reviews
+====================================================
+
+GET /health
+{
+  "status": "ok",
+  "version": "0.1.0",
+  "duckdb": "connected",
+  "products_count": 83119,
+  "reviews_count": 99946
+}
+
+GET /search?q=coffee+maker&k=5&mode=hybrid
+query="coffee maker" mode=hybrid latency=10871.9ms total=5
+  #1 [B08ZSDD3LV] Coffee maker
+      ★5.0  (1 reviews)  score=0.000
+  #2 [B09TNCJKCM] Coffee maker
+      ★5.0  (1 reviews)  score=0.000
+  #3 [B003A4ZGP2] Coffee maker
+      ★5.0  (1 reviews)  score=0.000
+  #4 [B07W56C9YQ] The coffee maker
+      ★3.0  (2 reviews)  score=0.000
+  #5 [B07VD4PW3V] Good coffee maker
+      ★4.0  (3 reviews)  score=0.000
+
+GET /analytics/categories
+[{"category":"Home_and_Kitchen","product_count":83119,"review_count":99946,"avg_rating":4.392}]

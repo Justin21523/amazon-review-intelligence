@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+
+# Data (never commit raw dumps)
+data/*.duckdb
+data/*.joblib
+data/*.pkl
+data/sample/*.jsonl
+data/sample/*.parquet
+data/embeddings/
+!data/sample/.gitkeep
+!data/schema/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# uv
+.uv/
+uv.lock
+
+# Logs
+*.log
+logs/
+!data/evaluation_results.json

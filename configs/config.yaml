@@ -1,0 +1,57 @@
+app:
+  name: "Amazon Review Intelligence"
+  version: "0.1.0"
+  description: "Product search, recommendation, and NLP data product"
+
+paths:
+  duckdb_path: "./data/amazon_reviews.duckdb"
+  data_dir: "./data"
+  sample_data_dir: "./data/sample"
+  bm25_index_path: "./data/bm25_index.joblib"
+
+models:
+  embeddings_model: "all-MiniLM-L6-v2"
+  embeddings_batch_size: 64
+  embeddings_dim: 384
+
+search:
+  default_k: 10
+  default_mode: "hybrid"
+  default_alpha: 0.5
+  max_k: 100
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "http://localhost:8501"
+    - "http://localhost:3000"
+
+streamlit:
+  api_base_url: "http://localhost:8000"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+
+data:
+  electronics_brands:
+    - Sony
+    - Samsung
+    - Apple
+    - Bose
+    - Anker
+    - JBL
+    - Logitech
+    - Razer
+  product_types:
+    - Wireless Headphones
+    - Bluetooth Speaker
+    - USB-C Cable
+    - Laptop Charger
+    - Wireless Earbuds
+    - Mechanical Keyboard
+    - 4K Monitor
+    - Webcam
+    - Gaming Mouse
+    - Smart Watch
