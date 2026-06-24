@@ -1,0 +1,392 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* ─── App-level palette (light mode) ─── */
+  --app-bg: #F7F9FC;
+  --app-surface: #FFFFFF;
+  --app-border: #E5EAF2;
+  --app-brand: #2563EB;
+  --app-brand-light: #EFF6FF;
+  --app-brand-hover: #1D4ED8;
+  --app-accent: #0D9488;
+  --app-accent-light: #CCFBF1;
+  --app-success: #16A34A;
+  --app-warning: #D97706;
+  --app-danger: #DC2626;
+  --app-text: #111827;
+  --app-text-muted: #6B7280;
+  --app-text-subtle: #9CA3AF;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 60px;
+  --topbar-height: 56px;
+
+  /* ─── shadcn/ui overrides (blue primary) ─── */
+  --background: oklch(0.98 0.005 240);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.55 0.22 264);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.96 0.01 240);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: oklch(0.96 0.005 240);
+  --muted-foreground: oklch(0.50 0 0);
+  --accent: oklch(0.55 0.15 180);
+  --accent-foreground: oklch(0.98 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.91 0.01 240);
+  --input: oklch(0.91 0.01 240);
+  --ring: oklch(0.55 0.22 264);
+  --chart-1: oklch(0.55 0.22 264);
+  --chart-2: oklch(0.55 0.15 180);
+  --chart-3: oklch(0.55 0.2 295);
+  --chart-4: oklch(0.65 0.18 50);
+  --chart-5: oklch(0.60 0.22 20);
+  --radius: 0.75rem;
+  --sidebar: oklch(0.99 0.003 240);
+  --sidebar-foreground: oklch(0.25 0 0);
+  --sidebar-primary: oklch(0.55 0.22 264);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.96 0.01 240);
+  --sidebar-accent-foreground: oklch(0.25 0 0);
+  --sidebar-border: oklch(0.91 0.01 240);
+  --sidebar-ring: oklch(0.55 0.22 264);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.65 0.22 264);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.60 0.15 180);
+  --accent-foreground: oklch(0.145 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.65 0.22 264);
+  --chart-1: oklch(0.65 0.22 264);
+  --chart-2: oklch(0.60 0.15 180);
+  --chart-3: oklch(0.60 0.2 295);
+  --chart-4: oklch(0.70 0.18 50);
+  --chart-5: oklch(0.65 0.22 20);
+  --sidebar: oklch(0.175 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.65 0.22 264);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.65 0.22 264);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    background-color: var(--app-bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+  }
+  html {
+    @apply font-sans;
+  }
+
+  /* Typography scale */
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--app-text);
+    letter-spacing: -0.01em;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--app-text);
+  }
+  .text-muted {
+    color: var(--app-text-muted);
+  }
+  .kpi-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--app-text);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ─── Layout ─── */
+.app-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: var(--app-surface);
+  border-right: 1px solid var(--app-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  transition: width 0.2s ease;
+}
+
+.app-sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+  min-width: var(--sidebar-collapsed-width);
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-topbar {
+  height: var(--topbar-height);
+  min-height: var(--topbar-height);
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--app-bg);
+  padding: 24px;
+}
+
+/* ─── Cards ─── */
+.ari-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── KPI Cards ─── */
+.kpi-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.15s;
+}
+.kpi-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.kpi-card .kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.kpi-card .kpi-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--app-text);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-card .kpi-label {
+  font-size: 13px;
+  color: var(--app-text-muted);
+  margin-top: 2px;
+}
+
+/* ─── Product cards ─── */
+.product-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 16px;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+  border-color: var(--app-brand);
+}
+
+/* ─── Score bars ─── */
+.score-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.score-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.score-bar-label {
+  width: 52px;
+  color: var(--app-text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.score-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--app-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+.score-bar-value {
+  width: 32px;
+  text-align: right;
+  color: var(--app-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Sidebar nav ─── */
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--app-text-subtle);
+  padding: 12px 16px 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 1px 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--app-text-muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: var(--app-brand-light);
+  color: var(--app-brand);
+}
+.nav-item.active {
+  background: var(--app-brand-light);
+  color: var(--app-brand);
+  font-weight: 600;
+}
+
+/* ─── Status dot ─── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-dot.ok { background: var(--app-success); }
+.status-dot.error { background: var(--app-danger); }
+.status-dot.warning { background: var(--app-warning); }
+
+/* ─── Sentiment badges ─── */
+.sentiment-positive { color: var(--app-success); background: #F0FDF4; }
+.sentiment-neutral   { color: var(--app-warning); background: #FFFBEB; }
+.sentiment-negative  { color: var(--app-danger);  background: #FEF2F2; }
+
+/* ─── Pipeline stage cards ─── */
+.pipeline-stage {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 10px;
+  padding: 16px;
+  position: relative;
+}
+.pipeline-stage-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}

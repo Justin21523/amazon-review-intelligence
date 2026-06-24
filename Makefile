@@ -1,4 +1,4 @@
-.PHONY: sample-data etl index evaluate api app test docker-up docker-down lint format install clean
+.PHONY: sample-data etl index evaluate api app frontend-install frontend-dev frontend-build dev test docker-up docker-down lint format install clean
 
 PYTHON := python
 UV := uv
@@ -24,7 +24,21 @@ api:
 	uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
 
 app:
-	streamlit run src/app/main.py --server.port 8501
+	cd frontend && npm run dev
+
+frontend-install:
+	cd frontend && npm install
+
+frontend-dev:
+	cd frontend && npm run dev
+
+frontend-build:
+	cd frontend && npm run build
+
+dev:
+	@echo "Starting FastAPI (port 8001) and Next.js (port 3000)..."
+	@HF_HOME=$(HOME)/.cache/huggingface uvicorn src.api.main:app --host 0.0.0.0 --port 8001 &
+	@sleep 6 && cd frontend && npm run dev
 
 test:
 	pytest tests/ -v

@@ -55,3 +55,8 @@ uv.lock
 *.log
 logs/
 !data/evaluation_results.json
+
+# Next.js frontend
+frontend/.next/
+frontend/node_modules/
+frontend/out/

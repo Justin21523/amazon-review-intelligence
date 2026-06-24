@@ -89,3 +89,33 @@ class CategoryStats(BaseModel):
     product_count: int
     review_count: int
     avg_rating: float
+
+
+class OverviewStats(BaseModel):
+    products_count: int
+    reviews_count: int
+    avg_rating: float
+    unique_reviewers: int
+    categories_count: int
+    embeddings_count: int
+    date_range_start: str | None
+    date_range_end: str | None
+    query_log_count: int
+
+
+class TrendPoint(BaseModel):
+    month: str
+    count: int
+
+
+class TopProduct(BaseModel):
+    asin: str
+    title: str | None
+    avg_rating: float
+    rating_number: int
+    popularity_score: float
+
+
+class RatingBucket(BaseModel):
+    rating: int
+    count: int
